@@ -9,6 +9,7 @@ export class UsersService {
     email: string;
     gender: string;
     isMarried: boolean;
+    password: string;
   }[] = [
     {
       id: 1,
@@ -16,6 +17,7 @@ export class UsersService {
       email: 'alice@gmail.com',
       gender: 'female',
       isMarried: true,
+      password: 'test1234',
     },
     {
       id: 2,
@@ -23,6 +25,7 @@ export class UsersService {
       email: 'bob@gmail.com',
       gender: 'male',
       isMarried: false,
+      password: 'test1234',
     },
     {
       id: 3,
@@ -30,6 +33,7 @@ export class UsersService {
       email: 'charlie@gmail.com',
       gender: 'male',
       isMarried: true,
+      password: 'test1234',
     },
     {
       id: 4,
@@ -37,6 +41,7 @@ export class UsersService {
       email: 'diana@gmail.com',
       gender: 'female',
       isMarried: false,
+      password: 'test1234',
     },
     {
       id: 5,
@@ -44,6 +49,7 @@ export class UsersService {
       email: 'ethan@gmail.com',
       gender: 'male',
       isMarried: true,
+      password: 'test1234',
     },
   ];
 
@@ -62,6 +68,7 @@ export class UsersService {
     email: string;
     gender: string;
     isMarried: boolean;
+    password: string;
   }) {
     // const  = {
     //   id: 7,
