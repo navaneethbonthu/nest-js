@@ -1,86 +1,30 @@
-import { Injectable } from '@nestjs/common';
-import { log } from 'console';
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CrateUserDto } from './dtos/create-user.dto';
 
 @Injectable()
 export class UsersService {
-  users: {
-    id: number;
-    name: string;
-    email: string;
-    gender: string;
-    isMarried: boolean;
-    password: string;
-  }[] = [
-    {
-      id: 1,
-      name: 'Alice Johnson',
-      email: 'alice@gmail.com',
-      gender: 'female',
-      isMarried: true,
-      password: 'test1234',
-    },
-    {
-      id: 2,
-      name: 'Bob Smith',
-      email: 'bob@gmail.com',
-      gender: 'male',
-      isMarried: false,
-      password: 'test1234',
-    },
-    {
-      id: 3,
-      name: 'Charlie Brown',
-      email: 'charlie@gmail.com',
-      gender: 'male',
-      isMarried: true,
-      password: 'test1234',
-    },
-    {
-      id: 4,
-      name: 'Diana Miller',
-      email: 'diana@gmail.com',
-      gender: 'female',
-      isMarried: false,
-      password: 'test1234',
-    },
-    {
-      id: 5,
-      name: 'Ethan Davis',
-      email: 'ethan@gmail.com',
-      gender: 'male',
-      isMarried: true,
-      password: 'test1234',
-    },
-  ];
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
 
   getAllUsers() {
-    return this.users;
+    return this.userRepository.find();
   }
 
-  getUserById(id: number) {
-    const User = this.users.find((user) => user.id === id);
-    return User;
-  }
+  getUserById(id: number) {}
 
-  createUser(user: {
-    id: number;
-    name: string;
-    email: string;
-    gender: string;
-    isMarried: boolean;
-    password: string;
-  }) {
-    // const  = {
-    //   id: 7,
-    //   name: 'mark',
-    //   email: 'mark@gmail.com',
-    //   gender: 'male',
-    //   isMarried: true,
-    // };
-    return this.users.push(user);
+  public async createUser(userDto: CrateUserDto) {
+    const user = await this.userRepository.findOne({
+      where: { email: userDto.email },
+    });
+    if (user) {
+      return ' The user already exits';
+    }
+    let newUser = this.userRepository.create(userDto);
+    newUser = await this.userRepository.save(newUser);
+    return newUser;
   }
-
-  // deleteUser(id: number) {
-  //   return this.users.splice(id - 1, 1);
-  // }
 }

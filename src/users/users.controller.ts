@@ -13,8 +13,6 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CrateUserDto } from './dtos/create-user.dto';
-import { GetUserParamDto } from './dtos/get-user-param.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -24,15 +22,13 @@ export class UsersController {
   getUsers(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Param() param: GetUserParamDto,
   ) {
     return this.userService.getAllUsers();
   }
 
   @Post()
   createUsers(@Body() user: CrateUserDto) {
-    // return this.userService.createUser(user);
-    return ' User created successfully';
+    return this.userService.createUser(user);
   }
 
   @Get(':id')
@@ -40,8 +36,8 @@ export class UsersController {
     return this.userService.getUserById(id);
   }
 
-  @Patch()
-  updateUser(@Body() user: UpdateUserDto) {
-    return 'User patched successfully';
-  }
+  // @Patch()
+  // updateUser(@Body() user: UpdateUserDto) {
+  //   return 'User patched successfully';
+  // }
 }

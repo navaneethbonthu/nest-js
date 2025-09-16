@@ -6,25 +6,25 @@ import {
   IsOptional,
   IsString,
   isString,
+  MaxLength,
   MinLength,
 } from 'class-validator';
 
 export class CrateUserDto {
-  @IsNumber()
-  id: number;
-
   @IsString()
-  @MinLength(3, { message: 'Name requered minimun 3 charectors' })
+  @MinLength(3)
+  @MaxLength(24)
   @IsNotEmpty()
-  name: string;
+  userName: string;
 
   @IsEmail()
+  @IsNotEmpty()
+  @MaxLength(100)
   email: string;
 
   @IsString()
-  @IsOptional()
-  gender?: string;
-
-  @IsBoolean()
-  isMarried: boolean;
+  @IsNotEmpty()
+  @MinLength(3, { message: 'Password requered minimun 3 charectors' })
+  @MaxLength(100)
+  password: string;
 }
