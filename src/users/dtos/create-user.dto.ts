@@ -9,6 +9,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 
 export class CrateUserDto {
   @IsString()
@@ -27,4 +28,7 @@ export class CrateUserDto {
   @MinLength(3, { message: 'Password requered minimun 3 charectors' })
   @MaxLength(100)
   password: string;
+
+  @IsOptional()
+  profile: CreateProfileDto | null;
 }

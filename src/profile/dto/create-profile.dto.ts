@@ -32,9 +32,9 @@ export class CreateProfileDto {
 
   @IsString()
   @IsOptional()
-  bio: string;
+  bio?: string;
 
   @IsString()
   @IsOptional()
-  profileImage: string;
+  profileImage?: string;
 }

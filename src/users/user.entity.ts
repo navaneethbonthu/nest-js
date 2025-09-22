@@ -1,8 +1,11 @@
+import { Profile } from 'src/profile/profile.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -28,6 +31,13 @@ export class User {
     unique: true,
   })
   email: string;
+
+  @OneToOne(() => Profile, {
+    cascade: ['insert'],
+    eager: true,
+  })
+  @JoinColumn()
+  profile?: Profile;
 
   password: string;
 

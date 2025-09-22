@@ -17,14 +17,19 @@ export class UsersService {
   getUserById(id: number) {}
 
   public async createUser(userDto: CrateUserDto) {
-    const user = await this.userRepository.findOne({
-      where: { email: userDto.email },
-    });
-    if (user) {
-      return ' The user already exits';
-    }
-    let newUser = this.userRepository.create(userDto);
-    newUser = await this.userRepository.save(newUser);
-    return newUser;
+    // const user = await this.userRepository.findOne({
+    //   where: { email: userDto.email },
+    // });
+    // if (user) {
+    //   return ' The user already exits';
+    // }
+    // let newUser = this.userRepository.create(userDto);
+    // newUser = await this.userRepository.save(newUser);
+    // return newUser;
+
+    userDto.profile = userDto.profile ?? {};
+
+    let user = this.userRepository.create(userDto);
+    return await this.userRepository.save(user);
   }
 }
