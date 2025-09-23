@@ -36,8 +36,8 @@ export class UsersController {
     return this.userService.getUserById(id);
   }
 
-  // @Patch()
-  // updateUser(@Body() user: UpdateUserDto) {
-  //   return 'User patched successfully';
-  // }
+  @Delete(':id')
+  public deleteUser(@Param('id', ParseIntPipe) id) {
+    return this.userService.deleteUser(id);
+  }
 }

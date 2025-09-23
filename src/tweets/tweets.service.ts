@@ -1,38 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { CreateTweetDto } from './dto/create-tweet.dto';
+import { UsersService } from 'src/users/user.service';
+import { Repository } from 'typeorm';
+import { TweetsController } from './tweets.controller';
+import { Tweet } from './tweet.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TweetsService {
-  constructor() {}
+  constructor(
+    private readonly userService: UsersService,
+    @InjectRepository(Tweet)
+    private readonly tweetRepositary: Repository<Tweet>,
+  ) {}
 
-  tweets: { text: string; date: Date; userId: number }[] = [
-    {
-      text: 'Hello, world! This is my first tweet.',
-      date: new Date('2025-09-10T10:00:00Z'),
-      userId: 1,
-    },
-    {
-      text: 'Enjoying a beautiful day outside.',
-      date: new Date('2025-09-11T12:30:00Z'),
-      userId: 2,
-    },
-    {
-      text: 'Just finished an amazing book. Highly recommend!',
-      date: new Date('2025-09-12T15:45:00Z'),
-      userId: 1,
-    },
-    {
-      text: 'Working on a new project. Stay tuned!',
-      date: new Date('2025-09-13T09:15:00Z'),
-      userId: 3,
-    },
-    {
-      text: 'Great meeting with the team today.',
-      date: new Date('2025-09-14T11:00:00Z'),
-      userId: 2,
-    },
-  ];
+  getTweets(userId: number) {}
 
-  getTweets(userId: number) {
-    return this.tweets.filter((tweet) => tweet.userId == userId);
+  public async CreateTweet(createTweetDto: CreateTweetDto) {
+    let user = await this.userService.findUserById(createTweetDto.userId);
+
+    let tweet = await this.tweetRepositary.create({
+      ...createTweetDto,
+      user: user,
+    });
+
+    return tweet;
   }
 }

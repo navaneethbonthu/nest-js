@@ -11,25 +11,32 @@ export class UsersService {
   ) {}
 
   getAllUsers() {
-    return this.userRepository.find();
+    return this.userRepository.find({
+      relations: {
+        profile: true,
+      },
+    });
   }
 
   getUserById(id: number) {}
 
   public async createUser(userDto: CrateUserDto) {
-    // const user = await this.userRepository.findOne({
-    //   where: { email: userDto.email },
-    // });
-    // if (user) {
-    //   return ' The user already exits';
-    // }
-    // let newUser = this.userRepository.create(userDto);
-    // newUser = await this.userRepository.save(newUser);
-    // return newUser;
-
     userDto.profile = userDto.profile ?? {};
-
     let user = this.userRepository.create(userDto);
     return await this.userRepository.save(user);
+  }
+
+  public async deleteUser(id: number) {
+    // let user = await this.userRepository.findOneBy({ id });
+
+    await this.userRepository.delete(id);
+
+    // await this.prifileRepositary.delete(user.profile.id)
+
+    return { deleted: true };
+  }
+
+  public async findUserById(id: number) {
+    return await this.userRepository.findOneBy({ id });
   }
 }

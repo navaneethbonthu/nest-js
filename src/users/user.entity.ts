@@ -1,10 +1,12 @@
 import { Profile } from 'src/profile/profile.entity';
+import { Tweet } from 'src/tweets/tweet.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
@@ -32,12 +34,15 @@ export class User {
   })
   email: string;
 
-  @OneToOne(() => Profile, {
+  @OneToOne(() => Profile, (profile) => profile.user, {
     cascade: ['insert'],
-    eager: true,
+    // eager: true,
   })
-  @JoinColumn()
+  // @JoinColumn()
   profile?: Profile;
+
+  @OneToMany(() => Tweet, (tweet) => tweet.user)
+  tweets: Tweet[];
 
   password: string;
 
