@@ -6,9 +6,9 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class BcryptProvider implements HashingProvider {
   public async hashPassword(data: string | Buffer): Promise<string> {
-    let salt = await bcrypt.salt();
+    let salt = await bcrypt.genSalt();
 
-    return await bcrypt.hashedPassword(data, salt);
+    return await bcrypt.hash(data, salt);
   }
 
   public async comparePassword(

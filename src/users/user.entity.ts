@@ -44,6 +44,7 @@ export class User {
   @OneToMany(() => Tweet, (tweet) => tweet.user)
   tweets: Tweet[];
 
+  @Column({ nullable: true, default: '' })
   password: string;
 
   @CreateDateColumn()
