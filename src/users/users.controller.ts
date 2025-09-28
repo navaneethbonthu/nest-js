@@ -26,10 +26,10 @@ export class UsersController {
     return this.userService.getAllUsers();
   }
 
-  @Post()
-  createUsers(@Body() user: CrateUserDto) {
-    return this.userService.createUser(user);
-  }
+  // @Post()
+  // createUsers(@Body() user: CrateUserDto) {
+  //   return this.userService.createUser(user);
+  // }
 
   @Get(':id')
   getUserById(@Param('id', ParseIntPipe) id: number) {
