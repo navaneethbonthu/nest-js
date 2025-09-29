@@ -15,6 +15,6 @@ export class BcryptProvider implements HashingProvider {
     plainPassword: string | Buffer,
     hashedPassword: string | Buffer,
   ): Promise<Boolean> {
-    return await bcrypt.comparePassword(plainPassword, hashedPassword);
+    return await bcrypt.compare(plainPassword, hashedPassword);
   }
 }

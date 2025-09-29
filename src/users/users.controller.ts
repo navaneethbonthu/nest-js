@@ -10,11 +10,13 @@ import {
   DefaultValuePipe,
   ValidationPipe,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
-import { CrateUserDto } from './dtos/create-user.dto';
+import { AuthorizeGuard } from 'src/auth/guards/authorization.guard';
 
 @Controller('users')
+// @UseGuards(AuthorizeGuard)
 export class UsersController {
   constructor(private userService: UsersService) {}
 
@@ -25,11 +27,6 @@ export class UsersController {
   ) {
     return this.userService.getAllUsers();
   }
-
-  // @Post()
-  // createUsers(@Body() user: CrateUserDto) {
-  //   return this.userService.createUser(user);
-  // }
 
   @Get(':id')
   getUserById(@Param('id', ParseIntPipe) id: number) {

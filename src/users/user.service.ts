@@ -31,12 +31,11 @@ export class UsersService {
 
   public async createUser(userDto: CrateUserDto) {
     userDto.profile = userDto.profile ?? {};
-    log(userDto, 'userDto');
+
     let user = this.userRepository.create({
       ...userDto,
       password: await this.hasingProvider.hashPassword(userDto.password),
     });
-    console.log(user, 'user');
 
     return await this.userRepository.save(user);
   }

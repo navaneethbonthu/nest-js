@@ -13,6 +13,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import envValidations from './config/env.validations';
+import { JwtModule } from '@nestjs/jwt';
+import authConfig from './auth/config/auth.config';
+import { AuthorizeGuard } from './auth/guards/authorization.guard';
 
 const ENV = process.env.NODE_ENV;
 
@@ -51,8 +54,10 @@ const ENV = process.env.NODE_ENV;
         database: configService.get('database.database'),
       }),
     }),
+    ConfigModule.forFeature(authConfig),
+    JwtModule.registerAsync(authConfig.asProvider()),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: 'APP_GUARD', useClass: AuthorizeGuard }],
 })
 export class AppModule {}
