@@ -12,5 +12,8 @@ export default Joi.object({
   DB_HOST: Joi.string().required(),
   DB_TYPE: Joi.string().required(),
   JWT_TOKEN_SECRET: Joi.string().required(),
-  JWT_TOKEN_EXPIRATION: Joi.number().required().default(3600),
+  JWT_TOKEN_EXPIRATION: Joi.number().required(),
+  JWT_REFRESH_TOKEN_EXPIRATION: Joi.number().required(),
+  JWT_TOKEN_AUDIENCE: Joi.string().required(),
+  JWT_TOKEN_ISSUER: Joi.string().required(),
 });

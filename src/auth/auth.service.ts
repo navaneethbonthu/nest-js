@@ -13,6 +13,9 @@ import { LoginDto } from './dto/login.dto';
 import { HashingProvider } from './providers/hashing.provider';
 import { User } from 'src/users/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshTokenDTo } from './dto/refreshToken.dto';
+import { TreeRepository } from 'typeorm';
+import { error } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +49,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid Credentials');
     }
 
-    const token = await this.jwtService.signAsync(
+    return this.generateTokens(user);
+  }
+
+  async generateTokens(user) {
+    const access_token = await this.jwtService.signAsync(
       {
         sub: user.id,
         email: user.email,
@@ -59,6 +66,41 @@ export class AuthService {
       },
     );
 
-    return { access_token: token, success: true, message: 'Login Successful' };
+    const refresh_token = await this.jwtService.signAsync(
+      {
+        sub: user.id,
+      },
+      {
+        secret: this.authConfiguration.secret,
+        expiresIn: this.authConfiguration.refreshTokenExpiresIn,
+        audience: this.authConfiguration.audience,
+        issuer: this.authConfiguration.issuer,
+      },
+    );
+
+    return {
+      access_token: access_token,
+      refresh_token: refresh_token,
+      message: 'Login Successful',
+    };
+  }
+
+  async refreshToken(refreshTokenDto: RefreshTokenDTo) {
+    try {
+      const { sub } = await this.jwtService.verifyAsync(
+        refreshTokenDto.refreshToken,
+        {
+          secret: this.authConfiguration.secret,
+          audience: this.authConfiguration.audience,
+          issuer: this.authConfiguration.issuer,
+        },
+      );
+
+      const user = this.userService.findUserById(sub);
+
+      return this.generateTokens(user);
+    } catch (error) {
+      throw new UnauthorizedException(error);
+    }
   }
 }
