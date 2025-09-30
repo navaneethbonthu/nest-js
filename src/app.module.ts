@@ -16,6 +16,7 @@ import envValidations from './config/env.validations';
 import { JwtModule } from '@nestjs/jwt';
 import authConfig from './auth/config/auth.config';
 import { AuthorizeGuard } from './auth/guards/authorization.guard';
+import { ProductsModule } from './products/products.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -26,6 +27,7 @@ const ENV = process.env.NODE_ENV;
     AuthModule,
     ProfileModule,
     HashtagModule,
+    ProductsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: !ENV ? '.env' : `.env.${ENV.trim()}`,
@@ -58,6 +60,7 @@ const ENV = process.env.NODE_ENV;
     JwtModule.registerAsync(authConfig.asProvider()),
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: 'APP_GUARD', useClass: AuthorizeGuard }],
+  providers: [AppService],
+  // { provide: 'APP_GUARD', useClass: AuthorizeGuard }
 })
 export class AppModule {}

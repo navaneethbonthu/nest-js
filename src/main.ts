@@ -11,6 +11,12 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.enableCors({
+    // ⚠️ IMPORTANT: Replace 'http://localhost:4200' with your Angular dev server URL
+    origin: 'http://localhost:4200',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Allow cookies/authorization headers to be sent
+  });
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
