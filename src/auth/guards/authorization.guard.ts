@@ -21,18 +21,17 @@ export class AuthorizeGuard implements CanActivate {
     private readonly refloctor: Reflector,
   ) {}
 
-  canActivate(context: ExecutionContext): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.refloctor.getAllAndOverride<boolean>('isPublic', [
       context.getHandler(),
       context.getClass(),
     ]);
 
     if (isPublic) {
-      return Promise.resolve(true);
+      return true;
     }
 
     const request = context.switchToHttp().getRequest();
-
     const token = request.headers['authorization']?.split(' ')[1];
 
     if (!token) {
@@ -40,14 +39,17 @@ export class AuthorizeGuard implements CanActivate {
     }
 
     try {
-      const payload = this.jwtService.verifyAsync(
+      const payload = await this.jwtService.verifyAsync(
         token,
         this.authConfiguration,
       );
       request['user'] = payload;
-    } catch (error) {
-      throw new UnauthorizedException();
+    } catch (error: any) {
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token expired');
+      }
+      throw new UnauthorizedException('Invalid token');
     }
-    return Promise.resolve(true);
+    return true;
   }
 }

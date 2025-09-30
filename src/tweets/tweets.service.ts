@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateTweetDto } from './dto/create-tweet.dto';
 import { UsersService } from 'src/users/user.service';
 import { Repository } from 'typeorm';
@@ -24,19 +29,32 @@ export class TweetsService {
     });
   }
 
-  public async CreateTweet(createTweetDto: CreateTweetDto) {
-    let user = await this.userService.findUserById(createTweetDto.userId);
-    let hashtags = await this.hashtagService.findHashtags(
-      createTweetDto.hashtags,
-    );
+  public async CreateTweet(createTweetDto: CreateTweetDto, userId: number) {
+    const user = await this.userService.findUserById(userId);
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
 
-    let tweet = await this.tweetRepositary.create({
-      ...createTweetDto,
-      user: user,
-      hashtags: hashtags,
-    });
+    let hashtags;
+    try {
+      hashtags = await this.hashtagService.findHashtags(
+        createTweetDto.hashtags,
+      );
+    } catch (error) {
+      throw new BadRequestException('Invalid hashtags provided');
+    }
 
-    this.tweetRepositary.save(tweet);
+    let tweet;
+    try {
+      tweet = this.tweetRepositary.create({
+        ...createTweetDto,
+        user: user,
+        hashtags: hashtags,
+      });
+      await this.tweetRepositary.save(tweet);
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to create tweet');
+    }
 
     return tweet;
   }

@@ -16,9 +16,9 @@ export class CreateTweetDto {
   @IsOptional()
   Image?: string;
 
-  @IsNotEmpty()
-  @IsInt()
-  userId: number;
+  // @IsNotEmpty()
+  // @IsInt()
+  // userId: number;
 
   @IsOptional()
   @IsInt({ each: true })

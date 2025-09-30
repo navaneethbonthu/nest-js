@@ -13,6 +13,8 @@ import { CreateTweetDto } from './dto/create-tweet.dto';
 import { Tweet } from './tweet.entity';
 import { UpdateTweetDto } from './dto/update-tweet.dto';
 import { log } from 'console';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/users/user.entity';
 
 @Controller('tweets')
 export class TweetsController {
@@ -24,8 +26,11 @@ export class TweetsController {
   }
 
   @Post()
-  public createTweet(@Body() tweet: CreateTweetDto) {
-    return this.tweetsService.CreateTweet(tweet);
+  public createTweet(
+    @Body() tweet: CreateTweetDto,
+    @CurrentUser('sub') userId,
+  ) {
+    return this.tweetsService.CreateTweet(tweet, userId);
   }
 
   @Patch()

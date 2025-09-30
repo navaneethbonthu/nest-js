@@ -1,4 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import authConfig from './config/auth.config';
 import { ConfigType } from '@nestjs/config';
 
@@ -27,7 +32,8 @@ export class AuthService {
     const user = await this.userService.findUserByUsername(loginDto.username);
 
     if (!user || !(user instanceof User)) {
-      throw new Error('User not found or request timed out');
+      // Use NotFoundException for user not found
+      throw new NotFoundException('User not found or request timed out');
     }
 
     const isEqual = await this.hashingProvider.comparePassword(
@@ -36,7 +42,8 @@ export class AuthService {
     );
 
     if (!isEqual) {
-      throw new Error('Invalid Credentials');
+      // Use UnauthorizedException for invalid credentials
+      throw new UnauthorizedException('Invalid Credentials');
     }
 
     const token = await this.jwtService.signAsync(
