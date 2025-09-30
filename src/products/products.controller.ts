@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-products.dto';
 import { ProductsService } from './products.service';
@@ -27,7 +28,7 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
-  @Patch(':id')
+  @Put(':id')
   public updateProduct(
     @Param('id') id: string,
     @Body() updatedProductDto: UpdateProductsDto,
